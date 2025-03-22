@@ -22,5 +22,5 @@ int main()
     print_processes(random_list, count);
     free_processes(random_list);
 
-    return 0;
+    return 0; 
 }
