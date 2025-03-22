@@ -1,16 +1,23 @@
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Wall -g
+OBJ = main.o process.o utils.o scheduler.o
 
-OBJS = main.o process.o utils.o
+all: simulator
 
-all: test
+simulator: $(OBJ)
+	$(CC) $(CFLAGS) -o simulator $(OBJ)
 
-test: $(OBJS)
-	$(CC) $(CFLAGS) -o test $(OBJS)
+main.o: main.c process.h utils.h scheduler.h
+	$(CC) $(CFLAGS) -c main.c
 
-main.o: main.c process.h
 process.o: process.c process.h utils.h
+	$(CC) $(CFLAGS) -c process.c
+
 utils.o: utils.c utils.h
+	$(CC) $(CFLAGS) -c utils.c
+
+scheduler.o: scheduler.c scheduler.h process.h
+	$(CC) $(CFLAGS) -c scheduler.c
 
 clean:
-	rm -f *.o test
+	rm -f *.o simulator
