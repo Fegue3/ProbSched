@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "process.h"
-#include "utils.h"
-
-/// Gera uma lista de processos com dados fixos (para testes ou simulação controlada)
+#include "algorithms.h"
 Process* generate_static_processes(int count) {
     Process* list = malloc(sizeof(Process) * count);
     if (list == NULL) {

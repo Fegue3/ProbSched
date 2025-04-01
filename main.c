@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include "process.h"
-
+#include "algorithms.h"
 int main()
 {
     srand(time(NULL)); // Inicializa a seed para aleatoriedade

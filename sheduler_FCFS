@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include "scheduler_FCFS.h"
+#include "algorithms.h"
 
 Stats simulate_fcfs(Process* processes, int count) {
     int time = 0;

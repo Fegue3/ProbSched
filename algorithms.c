@@ -1,15 +1,4 @@
-#include <stdlib.h>
-#include <math.h>
-
-
-//headers
-
-double generate_exponential(double lambda);
-
-int generate_poisson(double lambda);
-
-//
-
+#include "algorithms.h"
 /// Gera um número com distribuição exponencial (ex: tempo entre chegadas)
 double generate_exponential(double lambda) {
     double u;

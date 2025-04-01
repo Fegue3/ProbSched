@@ -1,23 +1,36 @@
-CC = gcc
-CFLAGS = -Wall -g
-OBJ = main.o process.o utils.o scheduler_FCFS.o
+#A Simple Example Makefile for soshell
+#
+# Syntax:
+# Alvo: Dependencias
+# tab Action 1
+# tab Action 2
+#
+# Variaveis: compiler, compiler flags, libraries to link, names of the object files for the executable.
+#
+CC=cc
+FLAGS=-c -Wall
+LIBS=-lm
+OBS= main.o process.o scheduler_FCFS.o algorithms.o
 
-all: simulator
+#Alvo por defeito é o primeiro
+all :  simulator
 
-simulator: $(OBJ)
-	$(CC) $(CFLAGS) -o simulator $(OBJ)
+main.o : algorithms.h main.c
+	$(CC) $(FLAGS) main.c
 
-main.o: main.c process.h utils.h scheduler_FCFS.h
-	$(CC) $(CFLAGS) -c main.c
+process.o : algorithms.h process.c
+	$(CC) $(FLAGS) process.c
 
-process.o: process.c process.h utils.h
-	$(CC) $(CFLAGS) -c process.c
+scheduler_FCFS.o : algorithms.h scheduler_FCFS.c
+	$(CC) $(FLAGS) scheduler_FCFS.c
 
-utils.o: utils.c utils.h
-	$(CC) $(CFLAGS) -c utils.c
+algorithms.o : algorithms.h algorithms.c
+	$(CC) $(FLAGS) algorithms.c
 
-scheduler_FCFS.o: scheduler_FCFS.c scheduler_FCFS.h process.h
-	$(CC) $(CFLAGS) -c scheduler_FCFS.c
 
-clean:
-	rm -f *.o simulator
+simulator : $(OBS)
+	$(CC)  -o simulator  $(OBS) $(LIBS)
+clean limpar:
+	rm -f simulator *.o
+	rm -f *~
+	echo "Remover: Ficheiros executáveis, objetos e temporários."
