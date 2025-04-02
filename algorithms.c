@@ -23,3 +23,49 @@ int generate_poisson(double lambda) {
 
     return k - 1;
 }
+
+Stats simulate_sjf(Process* processes, int count) {
+    int time = 0;
+    int completed = 0;
+    int* done = calloc(count, sizeof(int));
+    double total_wait = 0;
+    double total_turnaround = 0;
+
+    while (completed < count) {
+        int idx = -1;
+        int min_burst = 1e9;
+
+        for (int i = 0; i < count; i++) {
+            if (!done[i] && processes[i].arrival_time <= time && processes[i].burst_time < min_burst) {
+                min_burst = processes[i].burst_time;
+                idx = i;
+            }
+        }
+
+        if (idx == -1) {
+            time++; 
+            continue;
+        }
+
+        int start_time = time;
+        time += processes[idx].burst_time;
+        int wait = start_time - processes[idx].arrival_time;
+        int turnaround = time - processes[idx].arrival_time;
+
+        total_wait += wait;
+        total_turnaround += turnaround;
+
+        printf("Processo %d: Chegada = %d, Início = %d, Fim = %d, Espera = %d, Turnaround = %d\n",
+               processes[idx].id, processes[idx].arrival_time, start_time, time, wait, turnaround);
+
+        done[idx] = 1;
+        completed++;
+    }
+
+    free(done);
+
+    Stats s;
+    s.avg_waiting_time = total_wait / count;
+    s.avg_turnaround_time = total_turnaround / count;
+    return s;
+}

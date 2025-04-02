@@ -18,5 +18,30 @@ int main()
     print_processes(random_list, count);
     free_processes(random_list);
 
+
+    printf("\n=== Escalonamento FCFS (First Come First Serve) ===\n");
+
+    Process* fcfs_list = generate_static_processes(count); // ou random_processes
+    print_processes(fcfs_list, count);
+
+    Stats fcfs_stats = simulate_fcfs(fcfs_list, count);
+    printf("Tempo médio de espera: %.2f\n", fcfs_stats.avg_waiting_time);
+    printf("Tempo médio de turnaround: %.2f\n", fcfs_stats.avg_turnaround_time);
+
+    free_processes(fcfs_list);
+
+
+    printf("\n=== Escalonamento SJF (Shortest Job First) ===\n");
+
+    Process* sjf_list = generate_static_processes(count); 
+    print_processes(sjf_list, count);
+
+    Stats sjf_stats = simulate_sjf(sjf_list, count);
+    printf("Tempo médio de espera: %.2f\n", sjf_stats.avg_waiting_time);
+    printf("Tempo médio de turnaround: %.2f\n", sjf_stats.avg_turnaround_time);
+
+    free_processes(sjf_list);
+
+
     return 0; 
 }

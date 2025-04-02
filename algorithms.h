@@ -21,7 +21,11 @@ typedef struct {
 
 Stats simulate_fcfs(Process* processes, int count);
 
+<<<<<<< HEAD
 Stats simulate_rr(Process* processes, int count, int quantum);
+=======
+Stats simulate_sjf(Process* processes, int count);
+>>>>>>> f9cf9f9 (add SJF scheduling simulation implementation)
 
 Process* generate_static_processes(int count);
 
@@ -34,4 +38,5 @@ void free_processes(Process* processes);
 double generate_exponential(double lambda);
 
 int generate_poisson(double lambda);
+
 
