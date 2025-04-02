@@ -71,5 +71,44 @@ int main()
     free_processes(priority_p_list);
 
 
+        printf("\n=== Escalonamento EDF (Earliest Deadline First) ===\n");
+    Process* edf_list = generate_static_processes(count); 
+    print_processes(edf_list, count);
+    Stats edf_stats = simulate_edf(edf_list, count);
+    printf("Tempo médio de espera: %.2f\n", edf_stats.avg_waiting_time);
+    printf("Tempo médio de turnaround: %.2f\n", edf_stats.avg_turnaround_time);
+    free_processes(edf_list);
+
+    printf("\n=== Escalonamento Rate Monotonic (RMS) ===\n");
+
+    // Define processos periódicos com período > 0
+    Process periodic_list[] = {
+        { .id = 0, .arrival_time = 0, .burst_time = 1, .remaining_time = 1, .priority = 1, .deadline = 4, .period = 4 },
+        { .id = 1, .arrival_time = 0, .burst_time = 2, .remaining_time = 2, .priority = 2, .deadline = 5, .period = 5 },
+        { .id = 2, .arrival_time = 0, .burst_time = 1, .remaining_time = 1, .priority = 3, .deadline = 8, .period = 8 }
+    };
+
+    int periodic_count = sizeof(periodic_list) / sizeof(Process);
+    int simulation_time = 20;
+
+    print_processes(periodic_list, periodic_count);
+
+    RTStats rt_stats = simulate_rate_monotonic(periodic_list, periodic_count, simulation_time);
+    printf("Total de processos periódicos: %d\n", rt_stats.total_processes);
+    printf("Instâncias completadas: %d\n", rt_stats.completed);
+    printf("Deadlines perdidos: %d\n", rt_stats.missed_deadlines);
+    printf("Utilização da CPU: %.2f%%\n", rt_stats.cpu_utilization * 100);
+
+    printf("\n=== Escalonamento Multilevel Queue (MLQ) ===\n");
+    Process* mlq_list = generate_static_processes(count);
+    print_processes(mlq_list, count);
+
+    Stats mlq_stats = simulate_mlq(mlq_list, count, quantum);
+    printf("Tempo médio de espera: %.2f\n", mlq_stats.avg_waiting_time);
+    printf("Tempo médio de turnaround: %.2f\n", mlq_stats.avg_turnaround_time);
+    free_processes(mlq_list);
+
     return 0; 
 }
+
+

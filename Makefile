@@ -11,7 +11,7 @@ CC=cc
 FLAGS=-c -Wall
 LIBS=-lm
 
-OBS= main.o process.o scheduler_FCFS.o algorithms.o scheduler_RR.o scheduler_EDF.o ps.o scheduler_RT.o
+OBS= main.o process.o scheduler_FCFS.o algorithms.o scheduler_RR.o scheduler_EDF.o ps.o scheduler_RT.o mqs.o
 
 
 #Alvo por defeito é o primeiro
@@ -40,6 +40,9 @@ ps.o : algorithms.h ps.c
 
 scheduler_RT.o : algorithms.h scheduler_RT.c
 	$(CC) $(FLAGS) scheduler_RT.c
+
+mqs.o : algorithms.h mqs.c
+	$(CC) $(FLAGS) mqs.c
 
 simulator : $(OBS)
 	$(CC)  -o simulator  $(OBS) $(LIBS)

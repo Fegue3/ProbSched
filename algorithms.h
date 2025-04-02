@@ -51,3 +51,5 @@ Stats simulate_priority_np(Process* processes, int count);
 Stats simulate_priority_p(Process* processes, int count);
 
 RTStats simulate_rate_monotonic(Process* processes, int count, int simulation_time);
+
+Stats simulate_mlq(Process* processes, int count, int quantum);
