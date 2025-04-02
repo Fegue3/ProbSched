@@ -30,6 +30,9 @@ algorithms.o : algorithms.h algorithms.c
 scheduler_RR.o : algorithms.h scheduler_RR.c
 	$(CC) $(FLAGS) scheduler_RR.c
 
+ps.o : algorithms.h ps.c
+	$(CC) $(FLAGS) ps.c
+
 simulator : $(OBS)
 	$(CC)  -o simulator  $(OBS) $(LIBS)
 clean limpar:
