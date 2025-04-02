@@ -25,6 +25,8 @@ Stats simulate_rr(Process* processes, int count, int quantum);
 
 Stats simulate_sjf(Process* processes, int count);
 
+Stats simulate_edf(Process* processes, int count);
+
 Process* generate_static_processes(int count);
 
 Process* generate_random_processes(int count, double lambda_arrival, double lambda_burst, int max_priority);

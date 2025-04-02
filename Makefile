@@ -10,7 +10,11 @@
 CC=cc
 FLAGS=-c -Wall
 LIBS=-lm
+<<<<<<< Updated upstream
 OBS= main.o process.o scheduler_FCFS.o algorithms.o scheduler_RR.o ps.o
+=======
+OBS= main.o process.o scheduler_FCFS.o algorithms.o scheduler_RR.o scheduler_EDF.o
+>>>>>>> Stashed changes
 
 #Alvo por defeito é o primeiro
 all :  simulator
@@ -20,6 +24,9 @@ main.o : algorithms.h main.c
 
 process.o : algorithms.h process.c
 	$(CC) $(FLAGS) process.c
+
+scheduler_EDF.o : algorithms.h scheduler_EDF.c
+	$(CC) $(FLAGS) scheduler_EDF.c
 
 scheduler_FCFS.o : algorithms.h scheduler_FCFS.c
 	$(CC) $(FLAGS) scheduler_FCFS.c
