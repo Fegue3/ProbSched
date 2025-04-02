@@ -21,7 +21,6 @@ typedef struct {
 
 Stats simulate_fcfs(Process* processes, int count);
 
-
 Stats simulate_rr(Process* processes, int count, int quantum);
 
 Stats simulate_sjf(Process* processes, int count);
@@ -37,5 +36,10 @@ void free_processes(Process* processes);
 double generate_exponential(double lambda);
 
 int generate_poisson(double lambda);
+
+Stats simulate_priority_np(Process* processes, int count);
+
+Stats simulate_priority_p(Process* processes, int count);
+
 
 

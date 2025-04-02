@@ -53,5 +53,23 @@ int main()
     printf("Tempo médio de turnaround: %.2f\n", rr_stats.avg_turnaround_time);
     free_processes(rr_list);
 
+
+    printf("\n=== Escalonamento Priority Não-Preemptivo ===\n");
+    Process* priority_np_list = generate_static_processes(count);
+    print_processes(priority_np_list, count);
+    Stats priority_np_stats = simulate_priority_np(priority_np_list, count);
+    printf("Tempo médio de espera: %.2f\n", priority_np_stats.avg_waiting_time);
+    printf("Tempo médio de turnaround: %.2f\n", priority_np_stats.avg_turnaround_time);
+    free_processes(priority_np_list);
+
+    printf("\n=== Escalonamento Priority Preemptivo ===\n");
+    Process* priority_p_list = generate_static_processes(count);
+    print_processes(priority_p_list, count);
+    Stats priority_p_stats = simulate_priority_p(priority_p_list, count);
+    printf("Tempo médio de espera: %.2f\n", priority_p_stats.avg_waiting_time);
+    printf("Tempo médio de turnaround: %.2f\n", priority_p_stats.avg_turnaround_time);
+    free_processes(priority_p_list);
+
+
     return 0; 
 }
