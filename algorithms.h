@@ -19,6 +19,13 @@ typedef struct {
     int period;           // Período (para Rate Monotonic)
 } Process;
 
+typedef struct {
+    int total_processes;
+    int completed;
+    int missed_deadlines;
+    double cpu_utilization;
+} RTStats;
+
 Stats simulate_fcfs(Process* processes, int count);
 
 Stats simulate_rr(Process* processes, int count, int quantum);
@@ -43,5 +50,4 @@ Stats simulate_priority_np(Process* processes, int count);
 
 Stats simulate_priority_p(Process* processes, int count);
 
-
-
+RTStats simulate_rate_monotonic(Process* processes, int count, int simulation_time);
