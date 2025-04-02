@@ -10,7 +10,7 @@
 CC=cc
 FLAGS=-c -Wall
 LIBS=-lm
-OBS= main.o process.o scheduler_FCFS.o algorithms.o scheduler_RR.o
+OBS= main.o process.o scheduler_FCFS.o algorithms.o scheduler_RR.o ps.o
 
 #Alvo por defeito é o primeiro
 all :  simulator
