@@ -10,7 +10,7 @@
 CC=cc
 FLAGS=-c -Wall
 LIBS=-lm
-OBS= main.o process.o scheduler_FCFS.o algorithms.o
+OBS= main.o process.o scheduler_FCFS.o algorithms.o scheduler_RR.o
 
 #Alvo por defeito é o primeiro
 all :  simulator
@@ -27,6 +27,8 @@ scheduler_FCFS.o : algorithms.h scheduler_FCFS.c
 algorithms.o : algorithms.h algorithms.c
 	$(CC) $(FLAGS) algorithms.c
 
+scheduler_RR.o : algorithms.h scheduler_RR.c
+	$(CC) $(FLAGS) scheduler_RR.c
 
 simulator : $(OBS)
 	$(CC)  -o simulator  $(OBS) $(LIBS)
