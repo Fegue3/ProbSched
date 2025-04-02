@@ -21,6 +21,8 @@ typedef struct {
 
 Stats simulate_fcfs(Process* processes, int count);
 
+Stats simulate_rr(Process* processes, int count, int quantum);
+
 Process* generate_static_processes(int count);
 
 Process* generate_random_processes(int count, double lambda_arrival, double lambda_burst, int max_priority);
