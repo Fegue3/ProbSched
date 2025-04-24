@@ -6,6 +6,9 @@
 typedef struct {
     double avg_waiting_time;
     double avg_turnaround_time;
+    double cpu_utilization;
+    double throughput;
+    int missed_deadlines;
 } Stats;
 
 typedef struct {
@@ -19,12 +22,6 @@ typedef struct {
     int period;           // Período (para Rate Monotonic)
 } Process;
 
-typedef struct {
-    int total_processes;
-    int completed;
-    int missed_deadlines;
-    double cpu_utilization;
-} RTStats;
 
 Stats simulate_fcfs(Process* processes, int count);
 
@@ -50,6 +47,6 @@ Stats simulate_priority_np(Process* processes, int count);
 
 Stats simulate_priority_p(Process* processes, int count);
 
-RTStats simulate_rate_monotonic(Process* processes, int count, int simulation_time);
+Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time);
 
 Stats simulate_mlq(Process* processes, int count, int quantum);

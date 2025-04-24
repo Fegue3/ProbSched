@@ -16,6 +16,16 @@ void show_menu_algoritmos() {
     printf("0. Voltar atrás\n");
 }
 
+void print_stats(Stats s) {
+    printf("Espera média: %.2f\n", s.avg_waiting_time);
+    printf("Turnaround médio: %.2f\n", s.avg_turnaround_time);
+    printf("Utilização da CPU: %.2f%%\n", s.cpu_utilization * 100);
+    printf("Throughput: %.2f processos/unidade de tempo\n", s.throughput);
+    if (s.missed_deadlines > 0)
+        printf("Deadlines perdidas: %d\n", s.missed_deadlines);
+}
+
+
 int main() {
     srand(time(NULL));
     int count = 5;
@@ -62,32 +72,33 @@ int main() {
             switch (opcao) {
                 case 1: {
                     Stats s = simulate_fcfs(processos, count);
-                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    print_stats(s);
                     break;
                 }
                 case 2: {
                     Stats s = simulate_sjf(processos, count);
-                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    print_stats(s);
+
                     break;
                 }
                 case 3: {
                     Stats s = simulate_rr(processos, count, quantum);
-                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    print_stats(s);
                     break;
                 }
                 case 4: {
                     Stats s = simulate_priority_np(processos, count);
-                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    print_stats(s);
                     break;
                 }
                 case 5: {
                     Stats s = simulate_priority_p(processos, count);
-                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    print_stats(s);
                     break;
                 }
                 case 6: {
                     Stats s = simulate_edf(processos, count);
-                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    print_stats(s);
                     break;
                 }
                 case 7: {
@@ -97,14 +108,13 @@ int main() {
                         {2, 0, 1, 1, 3, 8, 8}
                     };
                     int sim_time = 20;
-                    RTStats rs = simulate_rate_monotonic(periodic, 3, sim_time);
-                    printf("Completos: %d, Perdidos: %d, CPU: %.2f%%\n",
-                           rs.completed, rs.missed_deadlines, rs.cpu_utilization * 100);
+                    Stats rs = simulate_rate_monotonic(periodic, 3, sim_time);
+                    print_stats(rs);
                     break;
                 }
                 case 8: {
                     Stats s = simulate_mlq(processos, count, quantum);
-                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    print_stats(s);
                     break;
                 }
                 default:
