@@ -3,112 +3,117 @@
 #include <time.h>
 #include "algorithms.h"
 
-int main()
-{
-    srand(time(NULL)); // Inicializa a seed para aleatoriedade
+void show_menu_algoritmos() {
+    printf("\n--- Escolha o Algoritmo de Escalonamento ---\n");
+    printf("1. FCFS\n");
+    printf("2. SJF\n");
+    printf("3. Round Robin\n");
+    printf("4. Priority (Não-Preemptivo)\n");
+    printf("5. Priority (Preemptivo)\n");
+    printf("6. EDF\n");
+    printf("7. Rate Monotonic (RT)\n");
+    printf("8. Multilevel Queue\n");
+    printf("0. Voltar atrás\n");
+}
 
+int main() {
+    srand(time(NULL));
     int count = 5;
-    double lambda_arrival = 3.0; // controla frequência de chegada (Poisson)
-    double lambda_burst = 0.5;   // controla variação de burst time (Exponencial)
+    double lambda_arrival = 3.0;
+    double lambda_burst = 0.5;
     int max_priority = 5;
     int quantum = 2;
 
-    printf("=== Processos Estáticos ===\n");
-    Process *static_list = generate_static_processes(count);
-    print_processes(static_list, count);
-    free_processes(static_list);
+    int running = 1;
+    while (running) {
+        int tipo_dados = -1;
 
-    printf("\n=== Processos Aleatórios ===\n");
-    Process* random_list = generate_random_processes(count, lambda_arrival, lambda_burst, max_priority);
-    print_processes(random_list, count);
-    free_processes(random_list);
+        // Escolher tipo de dados ou sair
+        printf("\n=== ProbSched - Simulador de Escalonamento ===\n");
+        printf("1. Usar Processos Estáticos\n");
+        printf("2. Usar Processos Aleatórios\n");
+        printf("0. Sair\n");
+        printf("Escolha o tipo de dados: ");
+        scanf("%d", &tipo_dados);
 
+        if (tipo_dados == 0) {
+            printf("Saindo...\n");
+            break;
+        }
 
-    printf("\n=== Escalonamento FCFS (First Come First Serve) ===\n");
-    Process* fcfs_list = generate_static_processes(count); // ou generate_random_processes
-    print_processes(fcfs_list, count);
+        Process* processos = NULL;
+        if (tipo_dados == 1)
+            processos = generate_static_processes(count);
+        else if (tipo_dados == 2)
+            processos = generate_random_processes(count, lambda_arrival, lambda_burst, max_priority);
+        else
+            continue;
 
-    Stats fcfs_stats = simulate_fcfs(fcfs_list, count);
-    printf("Tempo médio de espera: %.2f\n", fcfs_stats.avg_waiting_time);
-    printf("Tempo médio de turnaround: %.2f\n", fcfs_stats.avg_turnaround_time);
-    free_processes(fcfs_list);
+        print_processes(processos, count);
 
+        int opcao = -1;
+        while (1) {
+            show_menu_algoritmos();
+            printf("Escolha: ");
+            scanf("%d", &opcao);
 
-    printf("\n=== Escalonamento SJF (Shortest Job First) ===\n");
-    Process* sjf_list = generate_static_processes(count); 
-    print_processes(sjf_list, count);
+            if (opcao == 0) break;  // Voltar ao menu anterior
 
-    Stats sjf_stats = simulate_sjf(sjf_list, count);
-    printf("Tempo médio de espera: %.2f\n", sjf_stats.avg_waiting_time);
-    printf("Tempo médio de turnaround: %.2f\n", sjf_stats.avg_turnaround_time);
-    free_processes(sjf_list);
+            switch (opcao) {
+                case 1: {
+                    Stats s = simulate_fcfs(processos, count);
+                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    break;
+                }
+                case 2: {
+                    Stats s = simulate_sjf(processos, count);
+                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    break;
+                }
+                case 3: {
+                    Stats s = simulate_rr(processos, count, quantum);
+                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    break;
+                }
+                case 4: {
+                    Stats s = simulate_priority_np(processos, count);
+                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    break;
+                }
+                case 5: {
+                    Stats s = simulate_priority_p(processos, count);
+                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    break;
+                }
+                case 6: {
+                    Stats s = simulate_edf(processos, count);
+                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    break;
+                }
+                case 7: {
+                    Process periodic[] = {
+                        {0, 0, 1, 1, 1, 4, 4},
+                        {1, 0, 2, 2, 2, 5, 5},
+                        {2, 0, 1, 1, 3, 8, 8}
+                    };
+                    int sim_time = 20;
+                    RTStats rs = simulate_rate_monotonic(periodic, 3, sim_time);
+                    printf("Completos: %d, Perdidos: %d, CPU: %.2f%%\n",
+                           rs.completed, rs.missed_deadlines, rs.cpu_utilization * 100);
+                    break;
+                }
+                case 8: {
+                    Stats s = simulate_mlq(processos, count, quantum);
+                    printf("Espera média: %.2f, Turnaround: %.2f\n", s.avg_waiting_time, s.avg_turnaround_time);
+                    break;
+                }
+                default:
+                    printf("Opção inválida!\n");
+            }
+        }
 
+        free_processes(processos);
+    }
 
-    printf("\n=== Escalonamento Round-Robin (RR) ===\n");
-    Process* rr_list = generate_static_processes(count); 
-    print_processes(rr_list, count);
-
-    Stats rr_stats = simulate_rr(rr_list, count, quantum);
-    printf("Tempo médio de espera: %.2f\n", rr_stats.avg_waiting_time);
-    printf("Tempo médio de turnaround: %.2f\n", rr_stats.avg_turnaround_time);
-    free_processes(rr_list);
-
-
-    printf("\n=== Escalonamento Priority Não-Preemptivo ===\n");
-    Process* priority_np_list = generate_static_processes(count);
-    print_processes(priority_np_list, count);
-    Stats priority_np_stats = simulate_priority_np(priority_np_list, count);
-    printf("Tempo médio de espera: %.2f\n", priority_np_stats.avg_waiting_time);
-    printf("Tempo médio de turnaround: %.2f\n", priority_np_stats.avg_turnaround_time);
-    free_processes(priority_np_list);
-
-    printf("\n=== Escalonamento Priority Preemptivo ===\n");
-    Process* priority_p_list = generate_static_processes(count);
-    print_processes(priority_p_list, count);
-    Stats priority_p_stats = simulate_priority_p(priority_p_list, count);
-    printf("Tempo médio de espera: %.2f\n", priority_p_stats.avg_waiting_time);
-    printf("Tempo médio de turnaround: %.2f\n", priority_p_stats.avg_turnaround_time);
-    free_processes(priority_p_list);
-
-
-        printf("\n=== Escalonamento EDF (Earliest Deadline First) ===\n");
-    Process* edf_list = generate_static_processes(count); 
-    print_processes(edf_list, count);
-    Stats edf_stats = simulate_edf(edf_list, count);
-    printf("Tempo médio de espera: %.2f\n", edf_stats.avg_waiting_time);
-    printf("Tempo médio de turnaround: %.2f\n", edf_stats.avg_turnaround_time);
-    free_processes(edf_list);
-
-    printf("\n=== Escalonamento Rate Monotonic (RMS) ===\n");
-
-    // Define processos periódicos com período > 0
-    Process periodic_list[] = {
-        { .id = 0, .arrival_time = 0, .burst_time = 1, .remaining_time = 1, .priority = 1, .deadline = 4, .period = 4 },
-        { .id = 1, .arrival_time = 0, .burst_time = 2, .remaining_time = 2, .priority = 2, .deadline = 5, .period = 5 },
-        { .id = 2, .arrival_time = 0, .burst_time = 1, .remaining_time = 1, .priority = 3, .deadline = 8, .period = 8 }
-    };
-
-    int periodic_count = sizeof(periodic_list) / sizeof(Process);
-    int simulation_time = 20;
-
-    print_processes(periodic_list, periodic_count);
-
-    RTStats rt_stats = simulate_rate_monotonic(periodic_list, periodic_count, simulation_time);
-    printf("Total de processos periódicos: %d\n", rt_stats.total_processes);
-    printf("Instâncias completadas: %d\n", rt_stats.completed);
-    printf("Deadlines perdidos: %d\n", rt_stats.missed_deadlines);
-    printf("Utilização da CPU: %.2f%%\n", rt_stats.cpu_utilization * 100);
-
-    printf("\n=== Escalonamento Multilevel Queue (MLQ) ===\n");
-    Process* mlq_list = generate_static_processes(count);
-    print_processes(mlq_list, count);
-
-    Stats mlq_stats = simulate_mlq(mlq_list, count, quantum);
-    printf("Tempo médio de espera: %.2f\n", mlq_stats.avg_waiting_time);
-    printf("Tempo médio de turnaround: %.2f\n", mlq_stats.avg_turnaround_time);
-    free_processes(mlq_list);
-
-    return 0; 
+    return 0;
 }
-
-
