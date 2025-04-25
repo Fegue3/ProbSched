@@ -18,8 +18,8 @@ Stats simulate_fcfs(Process* processes, int count) {
         total_wait += wait;
         total_turnaround += turnaround;
 
-        printf("Processo %d: Chegada = %d, Fim = %d, Espera = %d, Turnaround = %d\n",
-               processes[i].id, processes[i].arrival_time, time, wait, turnaround);
+        printf("Processo %d: Chegada = %d,Inicio = %d, Fim = %d, Espera = %d, Turnaround = %d\n",
+               processes[i].id, processes[i].arrival_time, start_time ,time, wait, turnaround);
     }
 
     Stats s;
