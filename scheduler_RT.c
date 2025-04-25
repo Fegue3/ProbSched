@@ -36,6 +36,8 @@ Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time
                 arrival[i] = time;
                 remaining[i] = processes[i].burst_time;
                 next_arrival[i] += processes[i].period;
+                started[i] = 0;
+                start_time[i] = -1;
             }
         }
 
