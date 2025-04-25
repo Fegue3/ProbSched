@@ -59,8 +59,8 @@ Stats simulate_rr(Process* processes, int count, int quantum) {
             int waiting = turnaround - processes[idx].burst_time;
             total_turnaround += turnaround;
             total_wait += waiting;
-            printf("Processo %d: Chegada=%d, Fim=%d, Espera=%d, Turnaround=%d\n",
-                   processes[idx].id, start_time, time, waiting, turnaround);
+            printf("Processo %d: Chegada=%d, Início=%d, Fim=%d, Espera=%d, Turnaround=%d\n",
+                processes[idx].id, processes[idx].arrival_time, start_time, time, waiting, turnaround);         
         }
     }
 
