@@ -9,11 +9,11 @@ Process* generate_static_processes(int count) {
     for (int i = 0; i < count; i++) {
         list[i].id = i;
         list[i].arrival_time = i * 2;
-        list[i].burst_time = 5 + (i % 4);         // 5 a 8
+        list[i].burst_time = 4 + (i % 4);         // 5 a 8
         list[i].remaining_time = list[i].burst_time;
         list[i].priority = (i % 5) + 1;           // 1 a 5
         list[i].deadline = list[i].arrival_time + 10;
-        list[i].period = 0; // só para tempo real
+        list[i].period = list[i].burst_time + 4;
     }
 
     return list;
@@ -44,7 +44,7 @@ Process* generate_random_processes(int count, double lambda_arrival, double lamb
 
         list[i].priority = rand() % max_priority + 1;
         list[i].deadline = list[i].arrival_time + (rand() % 11 + 5);
-        list[i].period = 0;
+        list[i].period = (rand() % 7) + 4;
     }
 
     return list;
