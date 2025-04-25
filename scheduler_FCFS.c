@@ -4,12 +4,14 @@ Stats simulate_fcfs(Process* processes, int count) {
     int time = 0;
     double total_wait = 0;
     double total_turnaround = 0;
+    int cpu_busy_time = 0;
 
     for (int i = 0; i < count; i++) {
         if (time < processes[i].arrival_time) {
             time = processes[i].arrival_time;
         }
         int start_time = time;
+        cpu_busy_time += processes[i].burst_time;
         time += processes[i].burst_time;
 
         int wait = start_time - processes[i].arrival_time;
@@ -25,5 +27,7 @@ Stats simulate_fcfs(Process* processes, int count) {
     Stats s;
     s.avg_waiting_time = total_wait / count;
     s.avg_turnaround_time = total_turnaround / count;
+    s.cpu_utilization = (double)cpu_busy_time / time;
+    s.throughput = (double)count / time;
     return s;
 }

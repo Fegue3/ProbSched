@@ -46,13 +46,12 @@ int main() {
         scanf("%d", &algoritmo);
     } while (algoritmo < 1 || algoritmo > 8);
 
-    // 2. Escolher número de processos ou tempo de simulação
-    if (algoritmo == 7) { // Rate Monotonic
+    printf("Número de processos a simular: ");
+    scanf("%d", &count);
+
+    if (algoritmo == 7) {
         printf("Tempo máximo de simulação: ");
         scanf("%d", &sim_time);
-    } else {
-        printf("Número de processos a simular: ");
-        scanf("%d", &count);
     }
 
     // 3. Se precisar de quantum

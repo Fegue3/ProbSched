@@ -5,6 +5,7 @@
 Stats simulate_edf(Process* processes, int count) {
     int time = 0;
     int completed = 0;
+    int cpu_busy_time = 0;
     int* remaining = malloc(sizeof(int) * count);
     int* finished = calloc(count, sizeof(int));
     int* started = calloc(count, sizeof(int)); // 0 = ainda não começou
@@ -17,6 +18,7 @@ Stats simulate_edf(Process* processes, int count) {
 
     double total_wait = 0;
     double total_turnaround = 0;
+    int missed_deadlines = 0;
 
     while (completed < count) {
         // Encontrar o processo com deadline mínimo que já chegou e não terminou
@@ -43,6 +45,7 @@ Stats simulate_edf(Process* processes, int count) {
         printf("Tempo %d: Processo %d em execução\n", time, processes[selected].id);
         time++;
         remaining[selected]--;
+        cpu_busy_time++;
 
         if (remaining[selected] == 0) {
             finished[selected] = 1;
@@ -60,6 +63,8 @@ Stats simulate_edf(Process* processes, int count) {
                    time,
                    waiting,
                    turnaround);
+            if (time > processes[selected].deadline) {
+                    missed_deadlines++;
         }
     }
 
@@ -71,5 +76,8 @@ Stats simulate_edf(Process* processes, int count) {
     Stats s;
     s.avg_waiting_time = total_wait / count;
     s.avg_turnaround_time = total_turnaround / count;
+    s.cpu_utilization = (double)cpu_busy_time / time;
+    s.throughput = (double)count / time;
+    s.missed_deadlines = missed_deadlines;
     return s;
 }

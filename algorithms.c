@@ -27,6 +27,7 @@ int generate_poisson(double lambda) {
 Stats simulate_sjf(Process* processes, int count) {
     int time = 0;
     int completed = 0;
+    int cpu_busy_time = 0;
     int* done = calloc(count, sizeof(int));
     double total_wait = 0;
     double total_turnaround = 0;
@@ -48,6 +49,7 @@ Stats simulate_sjf(Process* processes, int count) {
         }
 
         int start_time = time;
+        cpu_busy_time += processes[idx].burst_time; 
         time += processes[idx].burst_time;
         int wait = start_time - processes[idx].arrival_time;
         int turnaround = time - processes[idx].arrival_time;
@@ -67,5 +69,7 @@ Stats simulate_sjf(Process* processes, int count) {
     Stats s;
     s.avg_waiting_time = total_wait / count;
     s.avg_turnaround_time = total_turnaround / count;
+    s.cpu_utilization = (double)cpu_busy_time / time;
+    s.throughput = (double)count / time;
     return s;
 }

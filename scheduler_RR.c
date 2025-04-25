@@ -3,6 +3,7 @@
 Stats simulate_rr(Process* processes, int count, int quantum) {
     int time = 0;
     int completed = 0;
+    int cpu_busy_time = 0;
     int* remaining = malloc(sizeof(int) * count);
     int* arrived = malloc(sizeof(int) * count);
     for (int i = 0; i < count; i++) {
@@ -41,6 +42,7 @@ Stats simulate_rr(Process* processes, int count, int quantum) {
         int slice = remaining[idx] < quantum ? remaining[idx] : quantum;
         int start_time = time;
         time += slice;
+        cpu_busy_time += slice;
         remaining[idx] -= slice;
 
         // Verificar novos processos que chegaram durante este slice
@@ -71,5 +73,7 @@ Stats simulate_rr(Process* processes, int count, int quantum) {
     Stats s;
     s.avg_turnaround_time = total_turnaround / count;
     s.avg_waiting_time = total_wait / count;
+    s.cpu_utilization = (double)cpu_busy_time / time;
+    s.throughput = (double)count / time;
     return s;
 }

@@ -1,6 +1,7 @@
 #include "algorithms.h"
 Stats simulate_priority_np(Process* processes, int count) {
     int time = 0, completed = 0;
+    int cpu_busy_time = 0;
     int* done = calloc(count, sizeof(int));
     double total_wait = 0, total_turnaround = 0;
 
@@ -19,7 +20,8 @@ Stats simulate_priority_np(Process* processes, int count) {
             time++; // CPU idle
             continue;
         }
-
+        int start_time = time;
+        cpu_busy_time += processes[idx].burst_time;
         time += processes[idx].burst_time;
         int turnaround = time - processes[idx].arrival_time;
         int wait = turnaround - processes[idx].burst_time;
@@ -38,12 +40,14 @@ Stats simulate_priority_np(Process* processes, int count) {
     Stats s;
     s.avg_turnaround_time = total_turnaround / count;
     s.avg_waiting_time = total_wait / count;
+    s.cpu_utilization = (double)cpu_busy_time / time;
+    s.throughput = (double)count / time;
     return s;
 }
 
 Stats simulate_priority_p(Process* processes, int count) {
     int time = 0, completed = 0;
-
+    int cpu_busy_time = 0;
     int* remaining = malloc(sizeof(int) * count);
     int* done = calloc(count, sizeof(int));
     int* started = calloc(count, sizeof(int));
@@ -82,6 +86,7 @@ Stats simulate_priority_p(Process* processes, int count) {
         }
 
         printf("Tempo %d: Processo %d em execução\n", time, processes[idx].id);
+        cpu_busy_time++;
         remaining[idx]--;
         time++;
 
@@ -112,5 +117,7 @@ Stats simulate_priority_p(Process* processes, int count) {
     Stats s;
     s.avg_turnaround_time = total_turnaround / count;
     s.avg_waiting_time = total_wait / count;
+    s.cpu_utilization = (double)cpu_busy_time / time;
+    s.throughput = (double)count / time;
     return s;
 }

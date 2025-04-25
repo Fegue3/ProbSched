@@ -44,6 +44,13 @@ Stats simulate_mlq(Process* processes, int count, int quantum) {
     final.avg_turnaround_time = (s1.avg_turnaround_time * high_size +
                                  s2.avg_turnaround_time * mid_size +
                                  s3.avg_turnaround_time * low_size) / count;
+    final.cpu_utilization = (s1.cpu_utilization * high_size +
+                            s2.cpu_utilization * mid_size +
+                            s3.cpu_utilization * low_size) / count;
+      
+    final.throughput = (s1.throughput * high_size +
+                        s2.throughput * mid_size +
+                        s3.throughput * low_size) / count;
 
     free(high_list);
     free(mid_list);
