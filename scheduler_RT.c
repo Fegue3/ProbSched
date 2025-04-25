@@ -14,11 +14,14 @@ Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time
     int* remaining = malloc(sizeof(int) * count);
     int* arrival = malloc(sizeof(int) * count);
     int* next_arrival = malloc(sizeof(int) * count);
+    int* started = calloc(count, sizeof(int));
+    int* start_time = malloc(sizeof(int) * count);
 
     for (int i = 0; i < count; i++) {
         arrival[i] = processes[i].arrival_time;
         remaining[i] = processes[i].burst_time;
         next_arrival[i] = processes[i].arrival_time + processes[i].period;
+        start_time[i] = -1;
     }
 
     while (time < simulation_time) {
@@ -27,8 +30,7 @@ Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time
             if (time == next_arrival[i]) {
                 if (remaining[i] > 0) {
                     missed_deadlines++;
-                    // Agora não cancelamos a instância anterior
-                    // Ela pode terminar, e a nova espera pelo próximo ciclo
+                    // A instância anterior continua
                 }
 
                 arrival[i] = time;
@@ -52,7 +54,14 @@ Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time
         }
 
         if (selected != -1) {
-            int start_time = time;
+            // Guardar início na primeira vez
+            if (!started[selected]) {
+                start_time[selected] = time;
+                started[selected] = 1;
+            }
+
+            printf("Tempo %d: Processo %d em execução\n", time, processes[selected].id);
+
             remaining[selected]--;
             cpu_busy_time++;
 
@@ -64,8 +73,13 @@ Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time
                 total_wait += wait;
                 completed++;
 
-                printf("Processo %d: Chegada=%d, Início=%d, Fim=%d, Espera=%d, Turnaround=%d\n",
-                       processes[selected].id, arrival[selected], start_time, end_time, wait, turnaround);
+                printf("    Processo %d finalizado — Chegada=%d, Início=%d, Fim=%d, Espera=%d, Turnaround=%d\n\n",
+                       processes[selected].id,
+                       arrival[selected],
+                       start_time[selected],
+                       end_time,
+                       wait,
+                       turnaround);
             }
         }
 
@@ -75,6 +89,8 @@ Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time
     free(remaining);
     free(arrival);
     free(next_arrival);
+    free(started);
+    free(start_time);
 
     Stats s;
     s.avg_waiting_time = completed > 0 ? total_wait / completed : 0;
