@@ -41,8 +41,8 @@ Stats simulate_edf(Process* processes, int count) {
             total_turnaround += turnaround;
             total_wait += waiting;
 
-            printf("Processo %d: Fim=%d, Espera=%d, Turnaround=%d\n",
-                   processes[selected].id, time, waiting, turnaround);
+            printf("Processo %d: Chegada=%d, Fim=%d, Espera=%d, Turnaround=%d\n",
+                   processes[selected].id,processes[selected].arrival_time, time, waiting, turnaround);
         }
     }
 

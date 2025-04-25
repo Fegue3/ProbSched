@@ -28,8 +28,8 @@ Stats simulate_priority_np(Process* processes, int count) {
         total_turnaround += turnaround;
         total_wait += wait;
 
-        printf("Processo %d: Chegada=%d, Início=%d, Fim=%d, Espera=%d, Turnaround=%d\n",
-               processes[idx].id, processes[idx].arrival_time, start, time, wait, turnaround);
+        printf("Processo %d: Chegada=%d, Fim=%d, Espera=%d, Turnaround=%d\n",
+               processes[idx].id, processes[idx].arrival_time, time, wait, turnaround);
 
         done[idx] = 1;
         completed++;
