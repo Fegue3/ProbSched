@@ -9,7 +9,7 @@ Process* generate_static_processes(int count) {
     for (int i = 0; i < count; i++) {
         list[i].id = i;
         list[i].arrival_time = i * 2;
-        list[i].burst_time = 4 + (i % 4);         // 5 a 8
+        list[i].burst_time = 5 + (i % 4);         // 5 a 8
         list[i].remaining_time = list[i].burst_time;
         list[i].priority = (i % 5) + 1;           // 1 a 5
         list[i].deadline = list[i].arrival_time + 10;
