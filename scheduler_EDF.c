@@ -1,13 +1,18 @@
 #include "algorithms.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 Stats simulate_edf(Process* processes, int count) {
     int time = 0;
     int completed = 0;
     int* remaining = malloc(sizeof(int) * count);
     int* finished = calloc(count, sizeof(int));
+    int* started = calloc(count, sizeof(int)); // 0 = ainda não começou
+    int* start_time = malloc(sizeof(int) * count);
 
     for (int i = 0; i < count; i++) {
         remaining[i] = processes[i].burst_time;
+        start_time[i] = -1;
     }
 
     double total_wait = 0;
@@ -29,7 +34,14 @@ Stats simulate_edf(Process* processes, int count) {
             continue;
         }
 
-        time++; // executar 1 unidade (preemptivo)
+        // Marcar início da execução na 1ª vez
+        if (!started[selected]) {
+            start_time[selected] = time;
+            started[selected] = 1;
+        }
+
+        printf("Tempo %d: Processo %d em execução\n", time, processes[selected].id);
+        time++;
         remaining[selected]--;
 
         if (remaining[selected] == 0) {
@@ -41,13 +53,20 @@ Stats simulate_edf(Process* processes, int count) {
             total_turnaround += turnaround;
             total_wait += waiting;
 
-            printf("Processo %d: Chegada=%d, Fim=%d, Espera=%d, Turnaround=%d\n",
-                   processes[selected].id,processes[selected].arrival_time, time, waiting, turnaround);
+            printf("    Processo %d finalizado — Chegada=%d, Início=%d, Fim=%d, Espera=%d, Turnaround=%d\n\n",
+                   processes[selected].id,
+                   processes[selected].arrival_time,
+                   start_time[selected],
+                   time,
+                   waiting,
+                   turnaround);
         }
     }
 
     free(remaining);
     free(finished);
+    free(started);
+    free(start_time);
 
     Stats s;
     s.avg_waiting_time = total_wait / count;
