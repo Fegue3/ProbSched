@@ -67,6 +67,7 @@ Stats simulate_edf(Process* processes, int count) {
                     missed_deadlines++;
         }
     }
+}
 
     free(remaining);
     free(finished);
