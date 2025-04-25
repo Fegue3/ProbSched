@@ -13,10 +13,10 @@ void show_menu_algoritmos() {
     printf("6. EDF\n");
     printf("7. Rate Monotonic (RT)\n");
     printf("8. Multilevel Queue\n");
-    printf("0. Voltar atrás\n");
 }
 
 void print_stats(Stats s) {
+    printf("\n--- Estatísticas ---\n");
     printf("Espera média: %.2f\n", s.avg_waiting_time);
     printf("Turnaround médio: %.2f\n", s.avg_turnaround_time);
     printf("Utilização da CPU: %.2f%%\n", s.cpu_utilization * 100);
@@ -25,100 +25,108 @@ void print_stats(Stats s) {
         printf("Deadlines perdidas: %d\n", s.missed_deadlines);
 }
 
-
 int main() {
     srand(time(NULL));
-    int count = 5;
+
+    int algoritmo = -1;
+    int tipo_dados = -1;
+    int count = 0;
+    int sim_time = 0;
+    int quantum = 0;
     double lambda_arrival = 3.0;
     double lambda_burst = 0.5;
     int max_priority = 5;
-    int quantum = 2;
 
-    int running = 1;
-    while (running) {
-        int tipo_dados = -1;
+    printf("\n=== ProbSched - Simulador de Escalonamento ===\n");
 
-        // Escolher tipo de dados ou sair
-        printf("\n=== ProbSched - Simulador de Escalonamento ===\n");
-        printf("1. Usar Processos Estáticos\n");
-        printf("2. Usar Processos Aleatórios\n");
-        printf("0. Sair\n");
-        printf("Escolha o tipo de dados: ");
-        scanf("%d", &tipo_dados);
+    // 1. Escolher Algoritmo
+    show_menu_algoritmos();
+    do {
+        printf("Escolha o algoritmo: ");
+        scanf("%d", &algoritmo);
+    } while (algoritmo < 1 || algoritmo > 8);
 
-        if (tipo_dados == 0) {
-            printf("Saindo...\n");
-            break;
-        }
-
-        Process* processos = NULL;
-        if (tipo_dados == 1)
-            processos = generate_static_processes(count);
-        else if (tipo_dados == 2)
-            processos = generate_random_processes(count, lambda_arrival, lambda_burst, max_priority);
-        else
-            continue;
-
-        print_processes(processos, count);
-
-        int opcao = -1;
-        while (1) {
-            show_menu_algoritmos();
-            printf("Escolha: ");
-            scanf("%d", &opcao);
-
-            if (opcao == 0) break;  // Voltar ao menu anterior
-
-            switch (opcao) {
-                case 1: {
-                    Stats s = simulate_fcfs(processos, count);
-                    print_stats(s);
-                    break;
-                }
-                case 2: {
-                    Stats s = simulate_sjf(processos, count);
-                    print_stats(s);
-
-                    break;
-                }
-                case 3: {
-                    Stats s = simulate_rr(processos, count, quantum);
-                    print_stats(s);
-                    break;
-                }
-                case 4: {
-                    Stats s = simulate_priority_np(processos, count);
-                    print_stats(s);
-                    break;
-                }
-                case 5: {
-                    Stats s = simulate_priority_p(processos, count);
-                    print_stats(s);
-                    break;
-                }
-                case 6: {
-                    Stats s = simulate_edf(processos, count);
-                    print_stats(s);
-                    break;
-                }
-                case 7: {
-                    int sim_time = 20;
-                    Stats rs = simulate_rate_monotonic(processos, count, sim_time);
-                    print_stats(rs);
-                    break;
-                }
-                case 8: {
-                    Stats s = simulate_mlq(processos, count, quantum);
-                    print_stats(s);
-                    break;
-                }
-                default:
-                    printf("Opção inválida!\n");
-            }
-        }
-
-        free_processes(processos);
+    // 2. Escolher número de processos ou tempo de simulação
+    if (algoritmo == 7) { // Rate Monotonic
+        printf("Tempo máximo de simulação: ");
+        scanf("%d", &sim_time);
+    } else {
+        printf("Número de processos a simular: ");
+        scanf("%d", &count);
     }
+
+    // 3. Se precisar de quantum
+    if (algoritmo == 3 || algoritmo == 8) { // Round Robin ou MLQ
+        printf("Introduza o Quantum: ");
+        scanf("%d", &quantum);
+    }
+
+    // 4. Escolher tipo de dados
+    printf("\n--- Tipo de Processos ---\n");
+    printf("1. Lista Estática\n");
+    printf("2. Gerar Processos Aleatórios\n");
+    do {
+        printf("Escolha: ");
+        scanf("%d", &tipo_dados);
+    } while (tipo_dados != 1 && tipo_dados != 2);
+
+    Process* processos = NULL;
+
+    if (tipo_dados == 1) {
+        processos = generate_static_processes(count);
+    } else if (tipo_dados == 2) {
+        printf("Lambda para Arrival Time (Exponencial): ");
+        scanf("%lf", &lambda_arrival);
+
+        printf("Lambda para Burst Time (Exponencial): ");
+        scanf("%lf", &lambda_burst);
+
+        printf("Máximo da Prioridade (1 a N): ");
+        scanf("%d", &max_priority);
+
+        processos = generate_random_processes(count, lambda_arrival, lambda_burst, max_priority);
+    }
+
+    print_processes(processos, count);
+
+    // 5. Executar simulação
+    Stats stats;
+    switch (algoritmo) {
+        case 1:
+            stats = simulate_fcfs(processos, count);
+            break;
+        case 2:
+            stats = simulate_sjf(processos, count);
+            break;
+        case 3:
+            stats = simulate_rr(processos, count, quantum);
+            break;
+        case 4:
+            stats = simulate_priority_np(processos, count);
+            break;
+        case 5:
+            stats = simulate_priority_p(processos, count);
+            break;
+        case 6:
+            stats = simulate_edf(processos, count);
+            break;
+        case 7:
+            stats = simulate_rate_monotonic(processos, count, sim_time);
+            break;
+        case 8:
+            stats = simulate_mlq(processos, count, quantum);
+            break;
+        default:
+            printf("Algoritmo inválido!\n");
+            free_processes(processos);
+            return 1;
+    }
+
+    // 6. Mostrar estatísticas
+    print_stats(stats);
+
+    // 7. Libertar memória
+    free_processes(processos);
 
     return 0;
 }
