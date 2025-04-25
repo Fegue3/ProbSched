@@ -102,13 +102,8 @@ int main() {
                     break;
                 }
                 case 7: {
-                    Process periodic[] = {
-                        {0, 0, 1, 1, 1, 4, 4},
-                        {1, 0, 2, 2, 2, 5, 5},
-                        {2, 0, 1, 1, 3, 8, 8}
-                    };
                     int sim_time = 20;
-                    Stats rs = simulate_rate_monotonic(periodic, 3, sim_time);
+                    Stats rs = simulate_rate_monotonic(processos, count, sim_time);
                     print_stats(rs);
                     break;
                 }
