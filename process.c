@@ -107,7 +107,7 @@ Process* generate_random_periodic_processes(int count, double lambda_burst, int 
         list[i].remaining_time = list[i].burst_time;
 
         list[i].priority = rand() % max_priority + 1;
-        list[i].deadline = 4 + rand() % 10; // Podes melhorar depois
+        list[i].period = 4 + rand() % 10; // Podes melhorar depois
         list[i].deadline = list[i].period;     // Períodos realistas (4-11)
     }
 
