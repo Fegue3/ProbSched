@@ -20,7 +20,6 @@ Stats simulate_priority_np(Process* processes, int count) {
             continue;
         }
 
-        int start = time;
         time += processes[idx].burst_time;
         int turnaround = time - processes[idx].arrival_time;
         int wait = turnaround - processes[idx].burst_time;
