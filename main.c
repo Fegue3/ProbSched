@@ -40,6 +40,25 @@ int main() {
         double lambda_burst = 0.5;
         int max_priority = 5;
         int processos_periodicos = 0;
+        int multicore_mode = 0;
+        int n_cores = 2;
+
+        // Escolher entre Monocore e Multicore
+        printf("\n--- Modo de Execucao ---\n");
+        printf("1. Monocore (Simples)\n");
+        printf("2. Multicore (2-14 Cores)\n");
+        do {
+            printf("Escolha: ");
+            scanf("%d", &multicore_mode);
+        } while (multicore_mode != 1 && multicore_mode != 2);
+    
+        if (multicore_mode == 2) {
+            do {
+                printf("Numero de cores (2,4,6,8,10,12,14): ");
+                scanf("%d", &n_cores);
+            } while (n_cores != 2 && n_cores != 4 && n_cores != 6 && n_cores != 8 &&
+                     n_cores != 10 && n_cores != 12 && n_cores != 14);
+        }
 
         printf("\n=== ProbSched - Simulador de Escalonamento ===\n");
 

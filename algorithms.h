@@ -40,6 +40,8 @@ Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time
 
 Stats simulate_mlq(Process* processes, int count, int quantum);
 
+Stats simulate_multicore(Process* processes, int count, int algoritmo, int quantum, int sim_time, int n_cores);
+
 Process* input_manual_processes(int count, int periodic);
 
 Process* generate_static_processes(int count);
