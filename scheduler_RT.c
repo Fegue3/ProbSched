@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <limits.h>
 #include "algorithms.h"
 
 Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time) {

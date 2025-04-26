@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <limits.h>
 
 
 typedef struct {
@@ -18,7 +19,6 @@ typedef struct {
     int burst_time;       // Tempo total de CPU necessário
     int remaining_time;   // Tempo restante (útil para RR ou preemptivos)
     int priority;         // Prioridade (para Priority Scheduling)
-
     int deadline;         // Deadline (para EDF)
     int period;           // Período (para Rate Monotonic)
 } Process;
