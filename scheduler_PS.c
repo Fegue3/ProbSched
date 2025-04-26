@@ -57,6 +57,7 @@ Stats simulate_priority_np(Process* processes, int count) {
 Stats simulate_priority_p(Process* processes, int count) {
     int time = 0, completed = 0;
     int cpu_busy_time = 0;
+    int missed_deadlines = 0;
     int* remaining = malloc(sizeof(int) * count);
     int* done = calloc(count, sizeof(int));
     int* started = calloc(count, sizeof(int));
@@ -100,6 +101,11 @@ Stats simulate_priority_p(Process* processes, int count) {
         time++;
 
         if (remaining[idx] == 0) {
+            if (time > processes[idx].deadline) {
+                missed_deadlines++;
+                printf("[Deadline Miss] Tempo %d: Processo %d não completou antes da deadline (Deadline: %d)\n",
+                       time, processes[idx].id, processes[idx].deadline);
+            }
             done[idx] = 1;
             completed++;
 
@@ -128,5 +134,6 @@ Stats simulate_priority_p(Process* processes, int count) {
     s.avg_waiting_time = total_wait / count;
     s.cpu_utilization = (double)cpu_busy_time / time;
     s.throughput = (double)count / time;
+    s.missed_deadlines = missed_deadlines;
     return s;
 }

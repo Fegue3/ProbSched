@@ -20,7 +20,7 @@ void print_stats(Stats s) {
     printf("Turnaround medio: %.2f\n", s.avg_turnaround_time);
     printf("Utilizacao da CPU: %.2f%%\n", s.cpu_utilization * 100);
     printf("Throughput: %.2f processos/unidade de tempo\n", s.throughput);
-    if (s.missed_deadlines > 0 && (s.avg_turnaround_time < 1.0)) { 
+    if (s.missed_deadlines > 0) { 
         printf("Deadlines perdidas: %d\n", s.missed_deadlines);
     }
 }
