@@ -32,6 +32,16 @@ Stats simulate_sjf(Process* processes, int count);
 
 Stats simulate_edf(Process* processes, int count, int simulation_time);
 
+Stats simulate_priority_np(Process* processes, int count);
+
+Stats simulate_priority_p(Process* processes, int count);
+
+Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time);
+
+Stats simulate_mlq(Process* processes, int count, int quantum);
+
+Process* input_manual_processes(int count, int periodic);
+
 Process* generate_static_processes(int count);
 
 Process* generate_random_processes(int count, double lambda_arrival, double lambda_burst, int max_priority);
@@ -39,7 +49,6 @@ Process* generate_random_processes(int count, double lambda_arrival, double lamb
 Process* generate_static_periodic_processes(int count);
 
 Process* generate_random_periodic_processes(int count, double lambda_burst, int max_priority);
-
 
 void print_processes(Process* processes, int count);
 
@@ -52,13 +61,3 @@ void free_processes(Process* processes);
 double generate_exponential(double lambda);
 
 int generate_poisson(double lambda);
-
-Stats simulate_priority_np(Process* processes, int count);
-
-Stats simulate_priority_p(Process* processes, int count);
-
-Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time);
-
-Stats simulate_mlq(Process* processes, int count, int quantum);
-
-Process* input_manual_processes(int count, int periodic);
