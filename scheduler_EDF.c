@@ -1,6 +1,5 @@
 #include "algorithms.h"
-#include <stdlib.h>
-#include <stdio.h>
+
 
 Stats simulate_edf(Process* processes, int count, int simulation_time) {
     int time = 0;
@@ -31,6 +30,10 @@ Stats simulate_edf(Process* processes, int count, int simulation_time) {
             if (time == next_arrival[i]) {
                 if (remaining[i] > 0) {
                     missed_deadlines++;
+                    printf("[Deadline Miss] Tempo %d: Processo %d não completou antes da deadline (Deadline: %d)\n",
+                           time,
+                           processes[i].id,
+                           arrival[i] + processes[i].deadline);
                 }
                 arrival[i] = time;
                 remaining[i] = processes[i].burst_time;
@@ -44,7 +47,7 @@ Stats simulate_edf(Process* processes, int count, int simulation_time) {
         int selected = -1;
         for (int i = 0; i < count; i++) {
             if (arrival[i] <= time && remaining[i] > 0) {
-                if (selected == -1 || processes[i].deadline < processes[selected].deadline) {
+                if (selected == -1 || (arrival[i] + processes[i].deadline) < (arrival[selected] + processes[selected].deadline)) {
                     selected = i;
                 }
             }
@@ -81,8 +84,12 @@ Stats simulate_edf(Process* processes, int count, int simulation_time) {
                    waiting,
                    turnaround);
 
-            if (time > processes[selected].deadline) {
+            if (time > arrival[selected] + processes[selected].deadline) {
                 missed_deadlines++;
+                printf("[Deadline Miss] Tempo %d: Processo %d terminou depois do deadline (Deadline: %d)\n",
+                    time,
+                    processes[selected].id,
+                    arrival[selected] + processes[selected].deadline);
             }
         }
     }

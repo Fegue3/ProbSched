@@ -30,7 +30,7 @@ Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time
             if (time == next_arrival[i]) {
                 if (remaining[i] > 0) {
                     missed_deadlines++;
-                    // A instância anterior continua
+                    printf("[Deadline Miss] Tempo %d: Processo %d não completou antes da deadline\n", time, processes[i].id);
                 }
 
                 arrival[i] = time;

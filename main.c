@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+
 #include "algorithms.h"
 
 void show_menu_algoritmos() {
@@ -22,8 +20,9 @@ void print_stats(Stats s) {
     printf("Turnaround medio: %.2f\n", s.avg_turnaround_time);
     printf("Utilizacao da CPU: %.2f%%\n", s.cpu_utilization * 100);
     printf("Throughput: %.2f processos/unidade de tempo\n", s.throughput);
-    if (s.missed_deadlines > 0)
+    if (s.missed_deadlines > 0 && (s.avg_turnaround_time < 1.0)) { 
         printf("Deadlines perdidas: %d\n", s.missed_deadlines);
+    }
 }
 
 int main() {
@@ -77,37 +76,40 @@ int main() {
 
         // 2. Escolher tipo de geracao
         printf("\n--- Tipo de Processos ---\n");
-        printf("1. Lista Estatica\n");
-        printf("2. Gerar Processos Aleatorios\n");
+        printf("1. Introduzir manualmente\n");
+        printf("2. Lista Estatica pre-definida\n");
+        printf("3. Gerar Processos Aleatorios\n");
         do {
             printf("Escolha: ");
             scanf("%d", &tipo_geracao);
-        } while (tipo_geracao != 1 && tipo_geracao != 2);
-
+        } while (tipo_geracao < 1 || tipo_geracao > 3);
+        
         Process* processos = NULL;
-
-        if (tipo_geracao == 1) { // Estaticos
+        
+        if (tipo_geracao == 1) { // manual
+            processos = input_manual_processes(count, processos_periodicos);
+        } else if (tipo_geracao == 2) { // lista estática
             if (processos_periodicos) {
                 processos = generate_static_periodic_processes(count);
             } else {
                 processos = generate_static_processes(count);
             }
-        } else if (tipo_geracao == 2) { // Aleatorios
+        } else if (tipo_geracao == 3) { // aleatórios
             if (processos_periodicos) {
                 printf("Lambda para Burst Time (Exponencial): ");
                 scanf("%lf", &lambda_burst);
-
+        
                 processos = generate_random_periodic_processes(count, lambda_burst, 1);
             } else {
                 printf("Lambda para Arrival Time (Poisson): ");
                 scanf("%lf", &lambda_arrival);
-
+        
                 printf("Lambda para Burst Time (Exponencial): ");
                 scanf("%lf", &lambda_burst);
-
+        
                 printf("Maximo da Prioridade (1 a N): ");
                 scanf("%d", &max_priority);
-
+        
                 processos = generate_random_processes(count, lambda_arrival, lambda_burst, max_priority);
             }
         }
@@ -175,4 +177,41 @@ int main() {
     printf("\nFim do simulador.\n");
 
     return 0;
+}
+
+
+Process* input_manual_processes(int count, int periodic) {
+    Process* list = malloc(sizeof(Process) * count);
+    if (!list) {
+        perror("Erro ao alocar memória");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < count; i++) {
+        printf("\n--- Processo %d ---\n", i);
+        list[i].id = i;
+
+        printf("Arrival time: ");
+        scanf("%d", &list[i].arrival_time);
+
+        printf("Burst time: ");
+        scanf("%d", &list[i].burst_time);
+        list[i].remaining_time = list[i].burst_time;
+
+        printf("Priority (menor = mais prioritário): ");
+        scanf("%d", &list[i].priority);
+
+        if (periodic) {
+            printf("Period: ");
+            scanf("%d", &list[i].period);
+
+            printf("Deadline (ou mesmo valor do período): ");
+            scanf("%d", &list[i].deadline);
+        } else {
+            list[i].period = 0;
+            list[i].deadline = list[i].arrival_time + 5;
+        }
+    }
+
+    return list;
 }

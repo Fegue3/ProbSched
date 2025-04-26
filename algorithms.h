@@ -3,6 +3,7 @@
 #include <math.h>
 #include <time.h>
 
+
 typedef struct {
     double avg_waiting_time;
     double avg_turnaround_time;
@@ -59,3 +60,5 @@ Stats simulate_priority_p(Process* processes, int count);
 Stats simulate_rate_monotonic(Process* processes, int count, int simulation_time);
 
 Stats simulate_mlq(Process* processes, int count, int quantum);
+
+Process* input_manual_processes(int count, int periodic);
