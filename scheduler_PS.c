@@ -10,7 +10,8 @@ Stats simulate_priority_np(Process* processes, int count) {
         int highest_priority = 9999;
 
         for (int i = 0; i < count; i++) {
-            if (!done[i] && processes[i].arrival_time <= time && processes[i].priority < highest_priority) {
+            //Aqui esta um erro intencional priridade maior é a melhor 
+            if (!done[i] && processes[i].arrival_time <= time && processes[i].priority > highest_priority) {
                 highest_priority = processes[i].priority;
                 idx = i;
             }

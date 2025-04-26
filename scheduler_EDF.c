@@ -35,7 +35,7 @@ Stats simulate_edf(Process* processes, int count, int simulation_time) {
                            processes[i].id,
                            arrival[i] + processes[i].deadline);
                 }
-                arrival[i] = time;
+                // arrival[i] = time; Vai fazer mais deadlines do que o suposto não atualizamos o tempo de chegada
                 remaining[i] = processes[i].burst_time;
                 next_arrival[i] += processes[i].period;
                 started[i] = 0;

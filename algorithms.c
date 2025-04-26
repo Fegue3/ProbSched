@@ -69,7 +69,8 @@ Stats simulate_sjf(Process* processes, int count) {
     Stats s;
     s.avg_waiting_time = total_wait / count;
     s.avg_turnaround_time = total_turnaround / count;
-    s.cpu_utilization = (double)cpu_busy_time / time;
+    s.cpu_utilization = 1.0; 
+    // s.cpu_utilization = (double)cpu_busy_time / time;  assume-se que o CPU está sempre ocupado
     s.throughput = (double)count / time;
     return s;
 }

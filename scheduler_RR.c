@@ -30,16 +30,16 @@ Stats simulate_rr(Process* processes, int count, int quantum) {
     }
 
     while (completed < count) {
-        if (front == rear) {
-            time++; // CPU idle
-            for (int i = 0; i < count; i++) {
-                if (!arrived[i] && processes[i].arrival_time <= time) {
-                    queue[rear++] = i;
-                    arrived[i] = 1;
-                }
-            }
-            continue;
-        }
+        // if (front == rear) {
+        //     time++; // CPU idle
+        //     for (int i = 0; i < count; i++) {
+        //         if (!arrived[i] && processes[i].arrival_time <= time) {
+        //             queue[rear++] = i;
+        //             arrived[i] = 1;
+        //         }
+        //     }
+        //     continue;
+        // } Pode causar acessos indevidos a memoria e segfaults
 
         int idx = queue[front++ % (count * 2)];
         int slice = (remaining[idx] < quantum) ? remaining[idx] : quantum;
