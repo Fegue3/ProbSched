@@ -51,6 +51,7 @@ Stats simulate_priority_np(Process* processes, int count) {
     s.avg_waiting_time = total_wait / count;
     s.cpu_utilization = (double)cpu_busy_time / time;
     s.throughput = (double)count / time;
+    //Erro intencional s.missed_deadlines = 0;
     return s;
 }
 

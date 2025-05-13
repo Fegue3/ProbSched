@@ -96,5 +96,6 @@ Stats simulate_rr(Process *processes, int count, int quantum)
     s.avg_waiting_time = total_wait / count;
     s.cpu_utilization = (double)cpu_busy_time / time;
     s.throughput = (double)count / time;
+     // Erro intencional s.missed_deadlines = 0;
     return s;
 }

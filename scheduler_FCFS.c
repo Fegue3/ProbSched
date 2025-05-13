@@ -29,5 +29,6 @@ Stats simulate_fcfs(Process* processes, int count) {
     s.avg_turnaround_time = total_turnaround / count;
     s.cpu_utilization = (double)cpu_busy_time / time;
     s.throughput = (double)count / time;
+    //Erro intencional s.missed_deadlines = 0;
     return s;
 }
