@@ -142,6 +142,9 @@ int main() {
 
         // 4. Executar simulacao
         Stats stats = {0};
+        if (multicore_mode == 2) {
+            stats = simulate_multicore(processos, count, algoritmo, quantum, sim_time, n_cores);
+        }else {
         switch (algoritmo) {
             case 1:
                 stats = simulate_fcfs(processos, count);
@@ -171,6 +174,7 @@ int main() {
                 printf("Algoritmo invalido!\n");
                 free_processes(processos);
                 goto fim_simulacao;
+            }
         }
 
         // 5. Mostrar estatisticas
